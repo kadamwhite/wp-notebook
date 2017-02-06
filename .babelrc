@@ -1,0 +1,15 @@
+{
+  "presets": [
+    // webpack understands the native import syntax, and uses it for tree shaking
+    ["es2015", {"modules": false}],
+
+    "react"
+    // Transpile React components to JavaScript
+  ],
+  "plugins": [
+    // Enables React code to work with HMR.
+    "react-hot-loader/babel",
+    // Enables usage of object rest spread in arguments
+    "transform-object-rest-spread"
+  ]
+}
