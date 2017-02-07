@@ -4,22 +4,21 @@
   "author": "K Adam White",
   "version": "1.0.0",
   "private": true,
-  "license": "MIT",
+  "license": "GPLv2",
   "browserslist": [
     "> 5%",
     "last 2 versions"
   ],
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server",
+    "watch": "webpack --watch",
     "lint": "eslint --ext js,jsx src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "d3": "^4.4.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-hot-loader": "^3.0.0-beta.6"
+    "wpapi": "^1.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.0",
@@ -34,17 +33,17 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "file-loader": "^0.9.0",
     "find-cache-dir": "^0.1.1",
     "hard-source-webpack-plugin": "^0.3.8",
-    "html-webpack-plugin": "^2.26.0",
     "node-object-hash": "^1.1.5",
     "postcss-loader": "^1.2.2",
     "style-loader": "^0.13.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.4.0",
     "url-loader": "^0.5.7",
-    "webpack": "^2.2.0",
+    "webpack": "^2.2.1",
     "webpack-dev-server": "^2.2.0"
   }
 }

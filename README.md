@@ -1,15 +1,11 @@
-# Loutky
+# WP Notebook
 
-This is my own personal project boilerplate. It gives me (and you) a Webpack 2 build pre-configured for React with hot module replacement; Stylus stylesheets; ESLint (following the AirBnB config); and webpack dev server for local development. Edit the name of the package and go&mdash;scripts are in `/src/scripts`.
+A simple front-end private journaling application application for the WordPress REST API, built with the [wpapi](https://github.com/wp-api/node-wpapi) NPM module and React.
 
-## Installing & running the application
+It registers a "wpn_journal" custom post type, which is configured to only be available through the API, and uses a React-generated front-end form to permit authenticated users to create private journal entries.
 
-From the command line, paste in these commands to pull down the boilerplate and initialize your repository. (These commands are only tested on OSX/linux: on Windows you're unfortunately on your own, but I recommend investigating the Windows Subsystem for Linux.)
+## Building the application
 
-```bash
-git clone --depth 1 git@github.com:kadamwhite/loutky.git && ./loutky/init.sh
-```
+Run `npm run build`, or `npm run watch` to start Webpack in watch mode.
 
-This will run the project setup script that will complete the installation.
-
-Once installed, use the command `npm start` to spin up the development server, which will then be accessible at [http://localhost:8080](http://localhost:8080)
+Files are built to `/dist`; generated bundles should be checked in to source control so that they can be detected by WordPress without a deploy-time build.
