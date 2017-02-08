@@ -1,8 +1,6 @@
 import React, { PropTypes, PureComponent } from 'react';
 import classNames from 'classnames';
 
-import DangerousBlock from '../DangerousBlock';
-
 import styles from './EntryComposer.styl';
 
 class EntryComposer extends PureComponent {
@@ -85,7 +83,6 @@ class EntryComposer extends PureComponent {
       content: this.valueOf('content'),
       current_music: this.valueOf('current_music'),
     };
-    console.log(this.props.entry, values.current_music);
 
     return (
       <form className={formClass} onSubmit={this.handleSubmit}>

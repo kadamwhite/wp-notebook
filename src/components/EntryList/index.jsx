@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
 import classNames from 'classnames';
 
-import DangerousBlock from '../DangerousBlock';
-
 import styles from './EntryList.styl';
 
 function formatDate(date) {
@@ -31,9 +29,11 @@ const EntryList = (props) => props.entries ? (
           return props.onEdit(entry);
         }}
       >
-        <h2>
-          {entry.title.rendered.replace(/^Private: /i, '')}
-        </h2>
+        {/* eslint-disable react/no-danger */}
+        <h2 dangerouslySetInnerHTML={{
+          __html: entry.title.rendered.replace(/^Private: /i, '')
+        }} />
+        {/* eslint-enable react/no-danger */}
         <p>{formatDate(entry.date)}</p>
       </button>
     ))}
