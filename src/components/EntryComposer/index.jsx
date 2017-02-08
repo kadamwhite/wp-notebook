@@ -1,4 +1,5 @@
 import React, { PropTypes, PureComponent } from 'react';
+import classNames from 'classnames';
 
 import DangerousBlock from '../DangerousBlock';
 
@@ -14,9 +15,9 @@ class EntryComposer extends PureComponent {
     this.state = {
       missingTitle: false,
       missingContent: false,
-      title: entry ? (entry.title && entry.title.raw) : '',
-      content: entry ? (entry.content && entry.content.raw) : '',
-      current_music: entry ? entry.current_music : '',
+      title: null,
+      content: null,
+      current_music: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -34,7 +35,9 @@ class EntryComposer extends PureComponent {
     event.preventDefault();
 
     const { onSubmit } = this.props;
-    const { title, content, current_music } = this.state;
+    const title = this.valueOf('title');
+    const content = this.valueOf('content');
+    const current_music = this.valueOf('current_music');
 
     this.setState({
       missingTitle: !title,
@@ -51,19 +54,41 @@ class EntryComposer extends PureComponent {
       current_music,
     }).then(result => {
       this.setState({
-        title: '',
-        content: '',
-        current_music: '',
+        title: null,
+        content: null,
+        current_music: null,
       });
     });
   }
 
+  valueOf(prop) {
+    if (this.state[prop] !== null) {
+      return this.state[prop];
+    }
+
+    if (this.props.entry && this.props.entry[prop]) {
+      return this.props.entry[prop].raw ?
+        this.props.entry[prop].raw :
+        this.props.entry[prop];
+    }
+
+    return '';
+  }
+
   render() {
     const { entry } = this.props;
+    const formClass = classNames(this.props.className, styles.EntryComposer);
     const { missingTitle, missingContent } = this.state;
 
+    const values = {
+      title: this.valueOf('title'),
+      content: this.valueOf('content'),
+      current_music: this.valueOf('current_music'),
+    };
+    console.log(this.props.entry, values.current_music);
+
     return (
-      <form className={styles.EntryComposer} onSubmit={this.handleSubmit}>
+      <form className={formClass} onSubmit={this.handleSubmit}>
         <h2>{!!entry ? 'Edit' : 'Add'} Journal Entry</h2>
 
         {missingTitle ? (
@@ -75,7 +100,7 @@ class EntryComposer extends PureComponent {
           <input
             type="text"
             name="title"
-            value={this.state.title}
+            value={values.title}
             onChange={this.handleChange}
             required
           />
@@ -89,7 +114,7 @@ class EntryComposer extends PureComponent {
           Content
           <textarea
             name="content"
-            value={this.state.content}
+            value={values.content}
             onChange={this.handleChange}
             required
           ></textarea>
@@ -100,7 +125,7 @@ class EntryComposer extends PureComponent {
           <input
             type="text"
             name="current_music"
-            value={this.state.current_music}
+            value={values.current_music}
             onChange={this.handleChange}
           />
         </label>
@@ -113,6 +138,7 @@ class EntryComposer extends PureComponent {
 
 EntryComposer.propTypes = {
   entry: PropTypes.shape({
+    id: PropTypes.number,
     title: PropTypes.shape({
       raw: PropTypes.string,
       rendered: PropTypes.string,

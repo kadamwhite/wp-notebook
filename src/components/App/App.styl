@@ -1,8 +1,26 @@
 .App {
+  overflow: hidden;
 }
 
 .AppError {
   border-left: 1px dotted red;
   margin-left: -1em;
   padding-left: 1em;
+}
+
+.rightColumn {
+  margin-bottom: 1em;
+  @media screen and (min-width: 800px) {
+    float: right;
+    width: 70%;
+  }
+}
+
+.leftColumn {
+  box-sizing: border-box;
+  @media screen and (min-width: 800px) {
+    float: left;
+    width: 30%;
+    padding-right: 1em;
+  }
 }

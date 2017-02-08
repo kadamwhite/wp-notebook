@@ -19,6 +19,7 @@ class App extends PureComponent {
     };
 
     this.savePost = this.savePost.bind(this);
+    this.handleEditClick = this.handleEditClick.bind(this);
   }
 
   componentDidMount() {
@@ -34,7 +35,24 @@ class App extends PureComponent {
   }
 
   savePost(post) {
-    console.log(post);
+    const { currentPost } = this.state;
+
+    if (currentPost && currentPost.id) {
+      return this.api.journalEntries()
+        .id(currentPost.id)
+        .update(Object.assign(post, {
+          status: 'private'
+        }))
+        .then(result => {
+          this.setState({
+            currentPost: null
+          });
+          // Refresh the data
+          this.updateData();
+          return result;
+        });
+    }
+
     return this.api.journalEntries()
       .create({
         title: post.title,
@@ -49,9 +67,16 @@ class App extends PureComponent {
       });
   }
 
+  handleEditClick(post) {
+    this.setState({
+      currentPost: post
+    });
+  }
+
   updateData() {
     this.api.journalEntries()
-      .status( 'any' )
+      .status('any')
+      .context('edit')
       .then(entries => {
         this.setState({
           loading: false,
@@ -73,25 +98,51 @@ class App extends PureComponent {
   }
 
   render() {
-    const { authError, entries, loading } = this.state;
-    return loading ? (
-      <div className={styles.AppLoading}>
-        <EntryComposer onSubmit={this.savePost} />
-        <h2>Loading Entries...</h2>
-      </div>
-    ) : authError ? (
-      <div className={styles.AppError}>
-        <h2>Authentication Failure</h2>
-        <p><em>You must be logged in to access your journal</em></p>
-      </div>
+    const {
+      authError,
+      currentPost,
+      entries,
+      loading,
+    } = this.state;
+
+    if ( authError ) {
+      return (
+        <div className={styles.AppError}>
+          <h2>Authentication Failure</h2>
+          <p><em>You must be logged in to access your journal</em></p>
+        </div>
+      );
+    }
+
+    if ( loading ) {
+      return (
+        <div className={styles.AppLoading}>
+          <h2>Loading Journal...</h2>
+        </div>
+      );
+    }
+
+    const leftColumn = entries.length ? (
+      <EntryList
+        className={styles.leftColumn}
+        entries={entries}
+        onEdit={this.handleEditClick}
+        selected={currentPost}
+      />
     ) : (
+      <div className={styles.leftColumn}>
+        <h2>No entries found</h2>
+      </div>
+    );
+
+    return (
       <div className={styles.App}>
-        <EntryComposer onSubmit={this.savePost} />
-        {entries.length ? (
-          <EntryList entries={entries} />
-        ) : (
-          <h2>No entries found</h2>
-        )}
+        <EntryComposer
+          entry={currentPost}
+          className={styles.rightColumn}
+          onSubmit={this.savePost}
+        />
+        {leftColumn}
       </div>
     );
   }

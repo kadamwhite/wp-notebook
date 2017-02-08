@@ -1,39 +1,63 @@
 import React, { PropTypes } from 'react';
+import classNames from 'classnames';
 
 import DangerousBlock from '../DangerousBlock';
 
+import styles from './EntryList.styl';
 
-const EntryList = ({ entries }) => entries ? (
-  <div>
-    {entries.map(entry => (
-      <div key={`entry${entry.id}`}>
+function formatDate(date) {
+  const dateObj = new Date(date);
+  return [
+    dateObj.getMonth() + 1,
+    dateObj.getDate(),
+    dateObj.getFullYear()
+  ].join('/');
+}
 
-      <h2 className={styles.entryTitle}>
-        {entry.title.rendered.replace(/^Private: /i, '')}
-      </h2>
-
-      <DangerousBlock html={entry.content.rendered} />
-      {entry.current_music ? (
-        <p>Currently listening to: {entry.current_music}</p>
-      ) : null}
-      </div>
+const EntryList = (props) => props.entries ? (
+  <div className={classNames(props.className)}>
+    {props.entries.map(entry => (
+      <button
+        className={classNames({
+          [styles.entry]: true,
+          [styles.selected]: props.selected && props.selected.id === entry.id
+        })}
+        key={`entry${entry.id}`}
+        onClick={() => {
+          if (props.selected && props.selected.id === entry.id) {
+            return props.onEdit(null);
+          }
+          // If we click a post again, close the editor
+          return props.onEdit(entry);
+        }}
+      >
+        <h2>
+          {entry.title.rendered.replace(/^Private: /i, '')}
+        </h2>
+        <p>{formatDate(entry.date)}</p>
+      </button>
     ))}
   </div>
 ) : null;
 
+const entryShape = PropTypes.shape({
+  id: PropTypes.number,
+  title: PropTypes.shape({
+    raw: PropTypes.string,
+    rendered: PropTypes.string,
+  }),
+  content: PropTypes.shape({
+    raw: PropTypes.string,
+    rendered: PropTypes.string,
+  }),
+  date: PropTypes.string,
+  current_music: PropTypes.string,
+});
 EntryList.propTypes = {
-  entries: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.shape({
-      raw: PropTypes.string,
-      rendered: PropTypes.string,
-    }),
-    content: PropTypes.shape({
-      raw: PropTypes.string,
-      rendered: PropTypes.string,
-    }),
-    date: PropTypes.string,
-    current_music: PropTypes.string,
-  })).isRequired,
+  className: PropTypes.string,
+  onEdit: PropTypes.func.isRequired,
+  selected: entryShape,
+  entries: PropTypes.arrayOf(entryShape).isRequired,
 };
 
 export default EntryList;
